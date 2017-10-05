@@ -10,7 +10,7 @@
 #ifndef EXAMPLEAPP_H
 #define EXAMPLEAPP_H
 
-#include "../lib/ogreengine.h"
+#include "ogreengine.h"
 
 #include <QtQuick/QQuickView>
 

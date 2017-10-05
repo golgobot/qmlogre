@@ -1,15 +1,20 @@
-/*!
- * \copyright (c) Nokia Corporation and/or its subsidiary(-ies) (qt-info@nokia.com) and/or contributors
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * \license{This source file is part of QmlOgre abd subject to the BSD license that is bundled
- * with this source code in the file LICENSE.}
- */
-
-#include <RenderSystems/GL/OgreGLTexture.h>
-#include <RenderSystems/GL/OgreGLFrameBufferObject.h>
+#ifdef JIBO_GL
 #include <RenderSystems/GL/OgreGLFBORenderTexture.h>
+#include <RenderSystems/GL/OgreGLFrameBufferObject.h>
+#include <RenderSystems/GL/OgreGLTexture.h>
+typedef Ogre::GLFrameBufferObject OgreFrameBufferObject;
+typedef Ogre::GLTexture OgreTexture;
+typedef Ogre::GLFBOManager OgreFBOManager;
+#endif
+
+#ifdef JIBO_GLES2
+#include <RenderSystems/GLES2/OgreGLES2FBORenderTexture.h>
+#include <RenderSystems/GLES2/OgreGLES2FrameBufferObject.h>
+#include <RenderSystems/GLES2/OgreGLES2Texture.h>
+typedef Ogre::GLES2FrameBufferObject OgreFrameBufferObject;
+typedef Ogre::GLES2Texture OgreTexture;
+typedef Ogre::GLES2FBOManager OgreFBOManager;
+#endif
 
 #include "ogrenode.h"
 
@@ -59,9 +64,9 @@ void OgreNode::doneOgreContext()
 {
     if (m_ogreFboId != 0)
     {
-        Ogre::GLFrameBufferObject *ogreFbo = NULL;
+        OgreFrameBufferObject *ogreFbo = NULL;
         m_renderTarget->getCustomAttribute("FBO", &ogreFbo);
-        Ogre::GLFBOManager *manager = ogreFbo->getManager();
+        OgreFBOManager *manager = ogreFbo->getManager();
         manager->unbind(m_renderTarget);
     }
 
@@ -71,7 +76,7 @@ void OgreNode::doneOgreContext()
 void OgreNode::activateOgreContext()
 {
     m_ogreEngineItem->activateOgreContext();
-    m_ogreEngineItem->ogreContext()->functions()->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_ogreFboId);
+    m_ogreEngineItem->ogreContext()->functions()->glBindFramebuffer(GL_FRAMEBUFFER, m_ogreFboId);
 }
 
 GLuint OgreNode::getOgreFboId()
@@ -79,9 +84,9 @@ GLuint OgreNode::getOgreFboId()
     if (!m_renderTarget)
         return 0;
 
-    Ogre::GLFrameBufferObject *ogreFbo = 0;
+    OgreFrameBufferObject *ogreFbo = 0;
     m_renderTarget->getCustomAttribute("FBO", &ogreFbo);
-    Ogre::GLFBOManager *manager = ogreFbo->getManager();
+    OgreFBOManager *manager = ogreFbo->getManager();
     manager->bind(m_renderTarget);
 
     GLint id;
@@ -138,7 +143,7 @@ void OgreNode::updateFBO()
                                             QRectF(0, 0, m_size.width(), m_size.height()),
                                             QRectF(0, 0, 1, 1));
 
-    Ogre::GLTexture *nativeTexture = static_cast<Ogre::GLTexture *>(m_rttTexture.get());
+    OgreTexture *nativeTexture = static_cast<OgreTexture *>(m_rttTexture.get());
 
     delete m_texture;
     m_texture = m_ogreEngineItem->createTextureFromId(nativeTexture->getGLID(), m_size);

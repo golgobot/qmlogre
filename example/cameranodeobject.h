@@ -12,7 +12,7 @@
 
 #include <QObject>
 
-#include "../lib/ogrecamerawrapper.h"
+#include "ogrecamerawrapper.h"
 
 namespace Ogre {
 class SceneNode;
