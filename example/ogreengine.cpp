@@ -70,7 +70,11 @@ void OgreEngine::setQuickWindow(QQuickWindow *window)
 
     m_quickWindow = window;
     m_qtContext = QOpenGLContext::currentContext();
-
+    QSurfaceFormat format = m_quickWindow->requestedFormat();
+    qDebug() << "red: " << format.redBufferSize();
+    qDebug() << "green: " << format.greenBufferSize();
+    qDebug() << "blue: " << format.blueBufferSize();
+    qDebug() << "alpha: " << format.alphaBufferSize();
     // create a new shared OpenGL context to be used exclusively by Ogre
     m_ogreContext = new QOpenGLContext();
     m_ogreContext->setFormat(m_quickWindow->requestedFormat());
@@ -92,7 +96,7 @@ void OgreEngine::activateOgreContext()
 void OgreEngine::doneOgreContext()
 {
     m_ogreContext->functions()->glBindBuffer(GL_ARRAY_BUFFER, 0);
-//    m_ogreContext->functions()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    m_ogreContext->functions()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     m_ogreContext->functions()->glBindRenderbuffer(GL_RENDERBUFFER, 0);
     m_ogreContext->functions()->glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

@@ -9,7 +9,6 @@ LIBS +=
 UI_DIR = ./.ui
 OBJECTS_DIR = ./.obj
 MOC_DIR = ./.moc
-DEFINES += JIBO_GLES2
 SOURCES += main.cpp \
     cameranodeobject.cpp \
     exampleapp.cpp \
@@ -30,10 +29,19 @@ OTHER_FILES += \
     resources/example.qml
 
 
-OGREDIR = /home/jonathan/v2/buildroot/output/target/usr
+OGREDIR = $$OGRE_HOME
 message(Using Ogre libraries in $$OGREDIR)
 INCLUDEPATH += $$OGREDIR/include/OGRE
-INCLUDEPATH += $$OGREDIR/include/OGRE/RenderSystems/GLES2
+
+ARCH = $$(ARCH)
+contains(ARCH, "ARM") {
+    DEFINES += JIBO_GLES2
+    INCLUDEPATH += $$OGREDIR/include/OGRE/RenderSystems/GLES2
+}
+contains(ARCH, "x86") {
+    DEFINES += JIBO_GL
+    INCLUDEPATH += $$OGREDIR/include/OGRE/RenderSystems/GL
+}
 #QMAKE_LFLAGS += -F$$OGREDIR/lib/release
 LIBS += -L$$OGREDIR/lib \
         -lOgreMain
