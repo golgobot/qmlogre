@@ -33,8 +33,9 @@ OGREDIR = $$OGRE_HOME
 message(Using Ogre libraries in $$OGREDIR)
 INCLUDEPATH += $$OGREDIR/include/OGRE
 
-ARCH = $$(ARCH)
+ARCH = $$ARCH
 contains(ARCH, "ARM") {
+    message(Building for ARM architecture)
     DEFINES += JIBO_GLES2
     INCLUDEPATH += $$OGREDIR/include/OGRE/RenderSystems/GLES2
 }
